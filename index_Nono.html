@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Nono Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black; /* خلفية سوداء */
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+
+    // ضبط حجم الشاشة
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const text = 'Love Nono '; // النص المتساقط الجديد
+    const fontSize = 20; // حجم الخط
+    const columns = canvas.width / fontSize; // عدد الأعمدة
+    const drops = Array(Math.floor(columns)).fill(1); // مواضع البداية لكل عمود
+
+    // رسم النصوص المتساقطة
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // تأثير التلاشي
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = `${fontSize}px Arial`;
+      for (let i = 0; i < drops.length; i++) {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, 'pink');
+        gradient.addColorStop(1, 'purple');
+        ctx.fillStyle = gradient;
+
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        // إعادة تعيين الموضع عند الخروج من الشاشة
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 100); // تحديث الرسم كل 100 مللي ثانية (أبطأ)
+    
+    // عند الضغط على الشاشة
+    canvas.addEventListener('click', (event) => {
+      const x = event.clientX;
+      const y = event.clientY;
+
+      ctx.font = '30px Arial';
+      ctx.fillStyle = 'red';
+      ctx.fillText('بحبك', x, y);
+    });
+  </script>
+</body>
+</html>
